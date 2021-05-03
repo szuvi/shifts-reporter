@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   AppBar,
   Toolbar,
@@ -7,6 +6,7 @@ import {
   Button,
   makeStyles,
 } from '@material-ui/core/';
+import { Link, useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,8 +21,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NavBar({ showInstructions }) {
+function NavBar() {
   const classes = useStyles();
+  const { pathname } = useLocation();
 
   return (
     <AppBar className={classes.root} position="static">
@@ -31,20 +32,17 @@ function NavBar({ showInstructions }) {
           Shift Reporter
         </Typography>
         <Button
-          onClick={showInstructions}
+          component={Link}
+          to={pathname === '/' ? '/instructions' : '/'}
           className={classes.instructionsButton}
           color="secondary"
           variant="contained"
         >
-          Instrukcja
+          {pathname === '/' ? 'Instrukcja' : 'Główna'}
         </Button>
       </Toolbar>
     </AppBar>
   );
 }
-
-NavBar.propTypes = {
-  showInstructions: PropTypes.func.isRequired,
-};
 
 export default NavBar;

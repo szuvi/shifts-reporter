@@ -10,6 +10,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 function getSteps() {
   return [
@@ -49,10 +50,6 @@ function Instructions() {
     setStep(0);
   };
 
-  const handleDone = () => {
-    // TODO
-  };
-
   return (
     <Card>
       <Stepper activeStep={currStep} alternativeLabel>
@@ -76,7 +73,7 @@ function Instructions() {
         ) : (
           <Button onClick={handleNext}>Nastepny</Button>
         )}
-        <Button onClick={handleDone} variant="contained" color="secondary">
+        <Button component={Link} to="/" variant="contained" color="secondary">
           Powrót
         </Button>
       </CardActions>
