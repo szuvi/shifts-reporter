@@ -1,11 +1,10 @@
 import { TextField } from '@material-ui/core';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 
-function ShiftsInput() {
-  const [input, setInput] = React.useState('');
-
+function ShiftsInput({ input, changeHandler }) {
   const handleInputChange = ({ target: { value } }) => {
-    setInput(value);
+    changeHandler(value);
   };
 
   return (
@@ -21,5 +20,10 @@ function ShiftsInput() {
     />
   );
 }
+
+ShiftsInput.propTypes = {
+  input: PropTypes.string.isRequired,
+  changeHandler: PropTypes.func.isRequired,
+};
 
 export default ShiftsInput;

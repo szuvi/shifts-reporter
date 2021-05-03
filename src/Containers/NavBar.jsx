@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(5),
   },
   instructionsButton: {
-    marginRight: theme.spacing(10),
+    marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
@@ -33,7 +33,8 @@ function NavBar({ showInstructions }) {
         <Button
           onClick={showInstructions}
           className={classes.instructionsButton}
-          color="inherit"
+          color="secondary"
+          variant="contained"
         >
           Instrukcja
         </Button>

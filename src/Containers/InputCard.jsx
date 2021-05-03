@@ -9,22 +9,36 @@ import {
 } from '@material-ui/core';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import ShiftsInput from '../Components/ShiftsInput';
+import sampleInput from '../Resources/sample';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: 375,
-    paddingBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(1),
+  },
+  cardButtons: {
+    justifyContent: 'space-between',
+    marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(1),
   },
   pasteButton: {
     marginTop: theme.spacing(1),
-  },
-  generateButton: {
-    marginLeft: theme.spacing(2),
   },
 }));
 
 function InputCard() {
   const classes = useStyles();
+  const [input, setInput] = React.useState('');
+
+  const handleSampleInput = () => {
+    setInput(sampleInput);
+  };
+
+  const handleReset = () => {
+    setInput('');
+  };
+
+  const handleGenerate = () => {};
 
   return (
     <>
@@ -36,17 +50,24 @@ function InputCard() {
               variant="outlined"
               color="secondary"
               startIcon={<FileCopyIcon />}
+              onClick={handleSampleInput}
             >
               Przykład
             </Button>
           }
           title="Wklej tablelę poniżej"
         />
+
         <CardContent>
-          <ShiftsInput />
+          <ShiftsInput input={input} changeHandler={setInput} />
         </CardContent>
-        <CardActions>
+
+        <CardActions className={classes.cardButtons}>
+          <Button onClick={handleReset} color="secondary">
+            Wyczyść
+          </Button>
           <Button
+            onClick={handleGenerate}
             className={classes.generateButton}
             variant="contained"
             color="primary"
