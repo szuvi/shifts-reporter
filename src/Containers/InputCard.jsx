@@ -10,6 +10,7 @@ import {
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import ShiftsInput from '../Components/ShiftsInput';
 import sampleInput from '../Resources/sample';
+import GenerateModal from './GenerateModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,6 +30,8 @@ const useStyles = makeStyles((theme) => ({
 function InputCard() {
   const classes = useStyles();
   const [input, setInput] = React.useState('');
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const users = ['Jan Kowalski', 'Anna Nowak'];
 
   const handleSampleInput = () => {
     setInput(sampleInput);
@@ -38,10 +41,17 @@ function InputCard() {
     setInput('');
   };
 
-  const handleGenerate = () => {};
+  const handleGenerate = () => {
+    setModalOpen(true);
+  };
 
   return (
     <>
+      <GenerateModal
+        open={modalOpen}
+        setOpen={setModalOpen}
+        userNames={users}
+      />
       <Card className={classes.root}>
         <CardHeader
           action={
