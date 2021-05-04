@@ -20,7 +20,7 @@ function UserList({ users, toggleUser, toggleAll, allChecked, error = '' }) {
   };
 
   return (
-    <FormControl error={error} component="fieldset">
+    <FormControl error={error.length > 0} component="fieldset">
       <FormLabel component="legend">Wybierz z listy</FormLabel>
 
       <FormGroup>

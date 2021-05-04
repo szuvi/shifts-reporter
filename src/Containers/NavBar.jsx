@@ -11,13 +11,11 @@ import { Link, useLocation } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   root: {
     marginBottom: theme.spacing(5),
-  },
-  instructionsButton: {
-    marginRight: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
-    marginLeft: theme.spacing(2),
   },
 }));
 
@@ -34,7 +32,6 @@ function NavBar() {
         <Button
           component={Link}
           to={pathname === '/' ? '/instructions' : '/'}
-          className={classes.instructionsButton}
           color="secondary"
           variant="contained"
         >

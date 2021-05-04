@@ -16,7 +16,6 @@ import raportVerification from '../Utils/objectVerification';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: 375,
     paddingBottom: theme.spacing(1),
   },
   cardButtons: {
@@ -32,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 function InputCard() {
   const classes = useStyles();
   const [input, setInput] = React.useState('');
-  const [reportObject, setReportObject] = React.useState(null);
+  const [reportObject, setReportObject] = React.useState({});
   const [modalOpen, setModalOpen] = React.useState(false);
   const [error, setError] = React.useState('');
   const users = ['Jan Kowalski', 'Anna Nowak'];
@@ -48,23 +47,26 @@ function InputCard() {
   const handleGenerate = () => {
     const myParser = new TableParser(input);
     const myReportObject = myParser.getObject();
-    console.table(myReportObject);
     if (raportVerification.isValidUserDateObject(myReportObject)) {
       setReportObject(myReportObject);
       setModalOpen(true);
     } else {
+      setReportObject({});
       setError('Nieprawidłowy format tabeli dyżurów.');
     }
   };
 
   return (
     <>
-      <GenerateModal
-        reportObject={reportObject}
-        open={modalOpen}
-        setOpen={setModalOpen}
-        userNames={users}
-      />
+      {Object.keys(reportObject).length > 0 && (
+        <GenerateModal
+          reportObject={reportObject}
+          open={modalOpen}
+          setOpen={setModalOpen}
+          userNames={users}
+        />
+      )}
+
       <Card className={classes.root}>
         <CardHeader
           action={
