@@ -2,13 +2,15 @@ import { TextField } from '@material-ui/core';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 
-function ShiftsInput({ input, changeHandler }) {
+function ShiftsInput({ input, changeHandler, error }) {
   const handleInputChange = ({ target: { value } }) => {
     changeHandler(value);
   };
 
   return (
     <TextField
+      error={error.length > 0}
+      helperText={error}
       value={input}
       onChange={handleInputChange}
       id="outlined-multiline-static"
@@ -24,6 +26,7 @@ function ShiftsInput({ input, changeHandler }) {
 ShiftsInput.propTypes = {
   input: PropTypes.string.isRequired,
   changeHandler: PropTypes.func.isRequired,
+  error: PropTypes.string.isRequired,
 };
 
 export default ShiftsInput;
