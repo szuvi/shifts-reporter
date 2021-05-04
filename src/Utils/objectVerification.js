@@ -5,8 +5,8 @@ function isValidUserDateObject(object) {
   if (!(object instanceof Object)) {
     return false;
   }
-  const { date, ...users } = object;
-  return isDateArray(date) && isUsersObject(users);
+  const { date, userNames, ...users } = object;
+  return isDateArray(date) && isNamesArray(userNames) && isUsersObject(users);
 }
 
 function isDateArray(input) {
@@ -19,6 +19,14 @@ function isMonth(input) {
 
 function isYear(input) {
   return typeof input === 'number' && !Number.isNaN(input) && input > 0;
+}
+
+function isNamesArray(input) {
+  return (
+    Array.isArray(input) &&
+    input.length > 0 &&
+    input.every((value) => typeof value === 'string')
+  );
 }
 
 function isUsersObject(input) {

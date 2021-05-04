@@ -6,16 +6,40 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  useMediaQuery,
+  useTheme,
 } from '@material-ui/core';
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import UserList from '../Components/UserList';
+import PdfGenerator from '../Utils/pdfGenerator';
+
+const userInitializer = (userNames) =>
+  userNames.reduce(
+    (acc, user) => {
+      acc.users[user] = false;
+      return acc;
+    },
+    { allToggled: false, error: '', users: {}, toGenerate: false }
+  );
 
 const usersReducer = (state, action) => {
   switch (action.type) {
+    case 'reset': {
+      return userInitializer(action.value);
+    }
+
+    case 'pdfGenerated': {
+      return {
+        ...state,
+        error: '',
+      };
+    }
+
     case 'toggle': {
       const targetUserState = state.users[action.value];
       return {
-        ...state,
+        allToggled: false,
+        toGenerate: false,
         error: '',
         users: {
           ...state.users,
@@ -30,6 +54,8 @@ const usersReducer = (state, action) => {
         return acc;
       }, {});
       return {
+        ...state,
+        toGenerate: false,
         error: '',
         allToggled: !state.allToggled,
         users: toggledUsers,
@@ -49,21 +75,23 @@ const usersReducer = (state, action) => {
   }
 };
 
-const userInitializer = (userNames) =>
-  userNames.reduce(
-    (acc, user) => {
-      acc.users[user] = false;
-      return acc;
-    },
-    { allToggled: false, error: '', users: {} },
-  );
-
-function GenerateModal({ open, setOpen, userNames, generatePdf }) {
+function GenerateModal({ open, setOpen, reportObject }) {
   const [state, dispatch] = React.useReducer(
     usersReducer,
-    userNames,
-    userInitializer,
+    reportObject.userNames,
+    userInitializer
   );
+  const [previousReportObj, setpreviousReportObj] = React.useState(
+    reportObject
+  );
+
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+
+  if (reportObject !== previousReportObj) {
+    dispatch({ type: 'reset', value: reportObject.userNames });
+    setpreviousReportObj(reportObject);
+  }
 
   const toggleUser = (userName) => {
     dispatch({ type: 'toggle', value: userName });
@@ -78,18 +106,25 @@ function GenerateModal({ open, setOpen, userNames, generatePdf }) {
   };
 
   const handleGenerate = () => {
-    const selectedUsers = Object.keys(state.users).filter(
-      (userName) => state.users[userName] === true,
+    const selectedUsersNames = Object.keys(state.users).filter(
+      (userName) => state.users[userName] === true
     );
-    if (selectedUsers.length === 0) {
-      dispatch({ type: 'error', value: 'Wybierz użytkownika' });
+    if (selectedUsersNames.length === 0) {
+      dispatch({ type: 'error', value: 'Wybierz użytkowników' });
     } else {
-      generatePdf(selectedUsers);
+      const { date } = reportObject;
+      const selectedDatesByUser = selectedUsersNames.reduce((acc, userName) => {
+        acc[userName] = reportObject[userName];
+        return acc;
+      }, {});
+      const generator = new PdfGenerator({ date, ...selectedDatesByUser });
+      generator.getReport();
+      dispatch({ type: 'pdfGenerated' });
     }
   };
 
   return (
-    <Dialog open={open} keepMounted onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
       <DialogTitle>Dla kogo wygenerować raport?</DialogTitle>
       <DialogContent>
         <UserList
@@ -118,7 +153,10 @@ GenerateModal.propTypes = {
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
   userNames: PropTypes.arrayOf(PropTypes.string).isRequired,
-  generatePdf: PropTypes.func.isRequired,
+  reportObject: PropTypes.shape({
+    date: PropTypes.shape({ month: PropTypes.string, year: PropTypes.number }),
+    userNames: PropTypes.arrayOf(PropTypes.string),
+  }).isRequired,
 };
 
 export default GenerateModal;

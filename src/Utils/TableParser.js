@@ -12,8 +12,10 @@ class TableParser {
     this.parsedToArray = TableParser.splitByCell(splittedByLine);
     const reportsDate = this.retrieveDate();
     const datesByUser = this.retrieveDatesByUser();
+    const userNames = Object.keys(datesByUser);
     return {
       date: reportsDate,
+      userNames,
       ...datesByUser,
     };
   }
