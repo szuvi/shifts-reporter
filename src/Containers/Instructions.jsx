@@ -7,10 +7,10 @@ import {
   Step,
   StepLabel,
   Stepper,
-  Typography,
 } from '@material-ui/core';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import InstructionImage from '../Components/InstructionImage';
 
 function getSteps() {
   return [
@@ -22,13 +22,8 @@ function getSteps() {
   ];
 }
 
-function getStepsContent(stepIndex) {
-  const stepsContent = [1, 2, 3, 4, 5, 6];
-  return stepsContent[stepIndex];
-}
-
 const useStyles = makeStyles({
-  root: {
+  actions: {
     justifyContent: 'space-around',
   },
 });
@@ -61,10 +56,10 @@ function Instructions() {
       </Stepper>
 
       <CardContent>
-        <Typography>{getStepsContent(currStep)}</Typography>
+        <InstructionImage stepCount={currStep + 1} />
       </CardContent>
 
-      <CardActions className={classes.root}>
+      <CardActions className={classes.actions}>
         <Button onClick={handleBack} disabled={currStep === 0}>
           Poprzedni
         </Button>
