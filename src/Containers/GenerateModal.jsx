@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import UserList from '../Components/UserList';
-import usePdfGenerator from '../Hooks/usePdfGenerator';
+import PdfGenerator from '../Utils/pdfGenerator';
 
 const userInitializer = (userNames) =>
   userNames.reduce(
@@ -81,30 +81,17 @@ function GenerateModal({ open, setOpen, reportObject }) {
     reportObject.userNames,
     userInitializer
   );
-
   const [previousReportObj, setpreviousReportObj] = React.useState(
     reportObject
   );
-  if (reportObject !== previousReportObj) {
-    dispatch({ type: 'reset', value: reportObject.userNames });
-    setpreviousReportObj(reportObject);
-  }
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
 
-  const selectedUsersData = React.useMemo(
-    () =>
-      Object.keys(state.users).reduce((acc, userName) => {
-        if (state.users[userName] === true) {
-          acc[userName] = reportObject[userName];
-        }
-        return acc;
-      }, {}),
-    [state.users]
-  );
-
-  const generatePdf = usePdfGenerator(reportObject, selectedUsersData);
+  if (reportObject !== previousReportObj) {
+    dispatch({ type: 'reset', value: reportObject.userNames });
+    setpreviousReportObj(reportObject);
+  }
 
   const toggleUser = (userName) => {
     dispatch({ type: 'toggle', value: userName });
@@ -119,10 +106,19 @@ function GenerateModal({ open, setOpen, reportObject }) {
   };
 
   const handleGenerate = () => {
-    if (Object.keys(selectedUsersData).length === 0) {
+    const selectedUsersNames = Object.keys(state.users).filter(
+      (userName) => state.users[userName] === true
+    );
+    if (selectedUsersNames.length === 0) {
       dispatch({ type: 'error', value: 'Wybierz użytkowników' });
     } else {
-      generatePdf();
+      const { date } = reportObject;
+      const selectedDatesByUser = selectedUsersNames.reduce((acc, userName) => {
+        acc[userName] = reportObject[userName];
+        return acc;
+      }, {});
+      const generator = new PdfGenerator({ date, ...selectedDatesByUser });
+      generator.getReport();
       dispatch({ type: 'pdfGenerated' });
     }
   };
