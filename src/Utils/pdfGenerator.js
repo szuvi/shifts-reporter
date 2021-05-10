@@ -7,6 +7,8 @@ class PdfGenerator {
     this.date = date;
     this.datesByUser = datesByUser;
     this.doc = new JsPDF({ orientation: 'landscape' });
+
+    this.getReport = this.getReport.bind(this);
   }
 
   getReport() {

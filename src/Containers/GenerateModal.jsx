@@ -104,7 +104,7 @@ function GenerateModal({ open, setOpen, reportObject }) {
     [state.users]
   );
 
-  const generatePdf = usePdfGenerator(reportObject, selectedUsersData);
+  const { getReport } = usePdfGenerator(reportObject, selectedUsersData);
 
   const toggleUser = (userName) => {
     dispatch({ type: 'toggle', value: userName });
@@ -122,7 +122,7 @@ function GenerateModal({ open, setOpen, reportObject }) {
     if (Object.keys(selectedUsersData).length === 0) {
       dispatch({ type: 'error', value: 'Wybierz użytkowników' });
     } else {
-      generatePdf();
+      getReport();
       dispatch({ type: 'pdfGenerated' });
     }
   };
