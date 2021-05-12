@@ -11,8 +11,8 @@ import FileCopyIcon from '@material-ui/icons/FileCopy';
 import ShiftsInput from '../Components/ShiftsInput';
 import sampleInput from '../Resources/sample';
 import GenerateModal from './GenerateModal';
-import TableParser from '../Utils/TableParser';
-import raportVerification from '../Utils/objectVerification';
+import { ReportContext } from '../Contexts/ReportProvider';
+import useTableParser from '../Hooks/useTableParser';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,12 +29,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function InputCard() {
-  const classes = useStyles();
   const [input, setInput] = React.useState('');
-  const [reportObject, setReportObject] = React.useState({});
   const [modalOpen, setModalOpen] = React.useState(false);
   const [error, setError] = React.useState('');
-  const users = ['Jan Kowalski', 'Anna Nowak'];
+  const [, dispatch] = React.useContext(ReportContext);
+  const classes = useStyles();
+  const { generateReportObject, isValidReport } = useTableParser();
 
   const handleSampleInput = () => {
     setInput(sampleInput);
@@ -45,27 +45,18 @@ function InputCard() {
   };
 
   const handleGenerate = () => {
-    const myParser = new TableParser(input);
-    const myReportObject = myParser.getObject();
-    if (raportVerification.isValidUserDateObject(myReportObject)) {
-      setReportObject(myReportObject);
+    const reportObject = generateReportObject(input);
+    if (isValidReport(reportObject)) {
+      dispatch({ type: 'UPDATE_REPORT', payload: reportObject });
       setModalOpen(true);
     } else {
-      setReportObject({});
       setError('Nieprawidłowy format tabeli dyżurów.');
     }
   };
 
   return (
     <>
-      {Object.keys(reportObject).length > 0 && (
-        <GenerateModal
-          reportObject={reportObject}
-          open={modalOpen}
-          setOpen={setModalOpen}
-          userNames={users}
-        />
-      )}
+      <GenerateModal open={modalOpen} setOpen={setModalOpen} />
 
       <Card className={classes.root}>
         <CardHeader

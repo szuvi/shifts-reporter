@@ -9,14 +9,17 @@ import {
   Switch,
 } from '@material-ui/core';
 import { v4 as uuidv4 } from 'uuid';
+import { ReportContext } from '../Contexts/ReportProvider';
 
-function UserList({ users, toggleUser, toggleAll, allChecked, error = '' }) {
+function UserList({ error }) {
+  const [state, dispatch] = React.useContext(ReportContext);
+
   const handleToggle = (event) => {
-    toggleUser(event.target.name);
+    dispatch({ type: 'TOGGLE', payload: event.target.name });
   };
 
   const handleToggleAll = () => {
-    toggleAll();
+    dispatch({ type: 'TOGGLE_ALL' });
   };
 
   return (
@@ -28,7 +31,7 @@ function UserList({ users, toggleUser, toggleAll, allChecked, error = '' }) {
           control={
             <Switch
               color="primary"
-              checked={allChecked}
+              checked={state.allToggled}
               onChange={handleToggleAll}
               name="toggleAll"
             />
@@ -36,12 +39,12 @@ function UserList({ users, toggleUser, toggleAll, allChecked, error = '' }) {
           label="Wszyscy"
         />
 
-        {Object.keys(users).map((userName) => (
+        {Object.keys(state.users).map((userName) => (
           <FormControlLabel
             key={uuidv4()}
             control={
               <Switch
-                checked={users[userName]}
+                checked={state.users[userName]}
                 onChange={handleToggle}
                 name={userName}
               />
@@ -56,12 +59,11 @@ function UserList({ users, toggleUser, toggleAll, allChecked, error = '' }) {
 }
 
 UserList.propTypes = {
-  users: PropTypes.objectOf(PropTypes.bool).isRequired,
-  toggleUser: PropTypes.func.isRequired,
-  toggleAll: PropTypes.func.isRequired,
-  allChecked: PropTypes.bool.isRequired,
-  // eslint-disable-next-line react/require-default-props
-  error: PropTypes.string, // default value procided in props deconstruction
+  error: PropTypes.string,
+};
+
+UserList.defaultProps = {
+  error: '',
 };
 
 export default UserList;

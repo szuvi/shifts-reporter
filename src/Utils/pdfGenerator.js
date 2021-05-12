@@ -3,9 +3,9 @@ import 'jspdf-autotable';
 import myFont from '../Resources/font';
 
 class PdfGenerator {
-  constructor({ date, ...datesByUser }) {
+  constructor({ date, users }) {
     this.date = date;
-    this.datesByUser = datesByUser;
+    this.users = users;
     this.doc = new JsPDF({ orientation: 'landscape' });
 
     this.getReport = this.getReport.bind(this);
@@ -17,7 +17,7 @@ class PdfGenerator {
   }
 
   fillPages() {
-    Object.keys(this.datesByUser).forEach((userName, index, userNameArray) => {
+    Object.keys(this.users).forEach((userName, index, userNameArray) => {
       this.addPageElements(userName);
       this.addTable(userName);
       if (index !== userNameArray.length - 1) {
@@ -51,7 +51,7 @@ class PdfGenerator {
   generateTableBody(userName) {
     const tableHeaders = PdfGenerator.getTableHeaders();
 
-    const tableBody = this.datesByUser[userName].map((day, index) => [
+    const tableBody = this.users[userName].map((day, index) => [
       `${index + 1}`,
       `${day}.${this.date.month}.${this.date.year}`,
       '15:05',

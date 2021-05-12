@@ -1,17 +1,16 @@
-import * as React from 'react';
 import TableParser from '../Utils/TableParser';
 import raportVerification from '../Utils/objectVerification';
 
-const useTableParser = (input) => {
-  const reportObject = React.useMemo(() => {
+const useTableParser = () => {
+  const generateReportObject = (input) => {
     const parser = new TableParser(input);
     return parser.getObject();
-  }, [input]);
+  };
 
-  const isValidReport = () =>
+  const isValidReport = (reportObject) =>
     raportVerification.isValidUserDateObject(reportObject);
 
-  return { reportObject, isValidReport };
+  return { generateReportObject, isValidReport };
 };
 
 export default useTableParser;

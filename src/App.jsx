@@ -6,6 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import InputCard from './Containers/InputCard';
 import Instructions from './Containers/Instructions';
 import NavBar from './Containers/NavBar';
+import { ReportProvider } from './Contexts/ReportProvider';
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -29,7 +30,9 @@ function App() {
         <NavBar />
         <Container maxWidth="md">
           <Route exact path="/">
-            <InputCard />
+            <ReportProvider>
+              <InputCard />
+            </ReportProvider>
           </Route>
           <Route exact path="/instructions">
             <Instructions />
