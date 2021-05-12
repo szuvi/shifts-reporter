@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core';
+import Img from 'react-cool-img';
 import images from '../Resources/Images/images';
 
 const useStyles = makeStyles({
@@ -14,7 +15,7 @@ function InstructionImage({ stepCount }) {
   const image = images[imageName];
   const classes = useStyles();
 
-  return <img className={classes.media} src={image} alt={image} />;
+  return <Img className={classes.media} src={image} alt={image} />;
 }
 
 InstructionImage.propTypes = {
