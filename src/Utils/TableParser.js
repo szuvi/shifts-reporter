@@ -5,18 +5,18 @@ class TableParser {
     }
     this.rawData = input;
     this.parsedToArray = null;
+
+    this.getObject = this.getObject.bind(this);
   }
 
   getObject() {
     const splittedByLine = TableParser.splitByLine(this.rawData);
     this.parsedToArray = TableParser.splitByCell(splittedByLine);
-    const reportsDate = this.retrieveDate();
+    const reportsDates = this.retrieveDate();
     const datesByUser = this.retrieveDatesByUser();
-    const userNames = Object.keys(datesByUser);
     return {
-      date: reportsDate,
-      userNames,
-      ...datesByUser,
+      date: reportsDates,
+      users: datesByUser,
     };
   }
 
